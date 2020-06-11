@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.776,G:\TestWork\Seles\uSalesContentsChange.pas=G:\TestWork\Seles\uSalesContents.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.984,G:\TestWork\Seles\uSalesChange.dfm=G:\TestWork\Seles\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.142,G:\TestWork\Sales.pas=G:\TestWork\Sales\Sales.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.536,G:\TestWork\Sales\uSales.dfm=G:\TestWork\Sales\Sales.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.524,G:\TestWork\Seles.dfm=C:\Users\kirxr\OneDrive\Документи\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.762,G:\TestWork\Seles\PrSales.dproj=G:\TestWork\Seles\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.888,G:\TestWork\Seles\PrSales.dproj=G:\TestWork\Sales\PrSales.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.524,G:\TestWork\Seles.pas=C:\Users\kirxr\OneDrive\Документи\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.038,G:\TestWork\Seles.pas=G:\TestWork\Sales.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.145,G:\TestWork\Seles\uSalesContents.pas=G:\TestWork\Seles\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.145,G:\TestWork\Seles\uSalesContents.dfm=G:\TestWork\Seles\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.104,=G:\TestWork\Seles\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.792,=G:\TestWork\Seles\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.336,G:\TestWork\Seles\Project1.dproj=C:\Users\kirxr\OneDrive\Документи\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.142,G:\TestWork\Sales.dfm=G:\TestWork\Sales\Sales.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.038,G:\TestWork\Seles.dfm=G:\TestWork\Sales.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.984,G:\TestWork\Seles\uSalesChange.pas=G:\TestWork\Seles\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.940,=C:\Users\kirxr\OneDrive\Документи\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.776,G:\TestWork\Seles\uSalesContentsChange.dfm=G:\TestWork\Seles\uSalesContents.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.536,G:\TestWork\Sales\uSales.pas=G:\TestWork\Sales\Sales.pas</Transaction>
+  </Transactions>
+	<BT_BuildType>Debug</BT_BuildType>
+</BorlandProject>

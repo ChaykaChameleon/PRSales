@@ -1,0 +1,191 @@
+unit uSales;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  ComObj, FileCtrl, ActiveX, OleServer,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Data.Win.ADODB, Vcl.Grids,
+  Vcl.DBGrids, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ComCtrls;
+
+type
+  TFmSales = class(TForm)
+    Panel1: TPanel;
+    gdSales: TDBGrid;
+    Panel2: TPanel;
+    DBGrid2: TDBGrid;
+    gdSalesContents: TDBGrid;
+    qSales: TADOQuery;
+    cSales: TADOConnection;
+    dsSales: TDataSource;
+    qSalesID: TAutoIncField;
+    qSalesSUMM: TBCDField;
+    qSalesVARIFICATION: TBooleanField;
+    dsSalesContents: TDataSource;
+    qSalesContents: TADOQuery;
+    qSalesContentsID_SALES: TIntegerField;
+    qSalesContentsNAME: TStringField;
+    qSalesContentsQTY: TIntegerField;
+    qSalesContentsPRICE: TBCDField;
+    qSalesContentsSUMM: TBCDField;
+    qSalesCLIENT: TStringField;
+    Button1: TButton;
+    btDelete: TButton;
+    btCreate: TButton;
+    Button4: TButton;
+    btChange: TButton;
+    Button2: TButton;
+    Button3: TButton;
+    btVarification: TButton;
+    sdSalesExcel: TSaveDialog;
+    qSalesDelet: TADOQuery;
+    qSalesContentsDelet: TADOQuery;
+    qSalesContentsID_PRODUCT: TAutoIncField;
+    qSalesContentsID: TAutoIncField;
+    qSalesDATE: TDateTimeField;
+    qSalesDATE_CREATE: TDateTimeField;
+    qSalesDATE_VARIFICATION: TDateTimeField;
+    procedure FormCreate(Sender: TObject);
+    procedure qSalesAfterScroll(DataSet: TDataSet);
+    procedure Button2Click(Sender: TObject);
+    procedure btDeleteClick(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure btCreateClick(Sender: TObject);
+    procedure btChangeClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FmSales: TFmSales;
+
+implementation
+
+{$R *.dfm}
+
+uses uSaleschange;
+
+procedure TFmSales.btChangeClick(Sender: TObject);
+begin
+  fmSalesChange.show;
+  fmSalesChange.btCreate.Visible := false;
+  fmSalesChange.btChange.Visible := true;
+
+end;
+
+procedure TFmSales.btCreateClick(Sender: TObject);
+begin
+  fmSalesChange.show;
+  fmSalesChange.btCreate.Visible := true;
+  fmSalesChange.btChange.Visible := false;
+end;
+
+procedure TFmSales.btDeleteClick(Sender: TObject);
+begin
+  if (MessageDlg('Удалить позицию ?', mtConfirmation, [mbOK, mbCancel], 0)
+    = mrOK) then
+  begin
+    qSalesDelet.Parameters.ParamByName('VAR_ID_SALES').value := qSalesID.value;
+    qSalesDelet.ExecSQL;
+    qSales.Close;
+    qSales.open;
+  end;
+
+end;
+
+procedure TFmSales.Button2Click(Sender: TObject);
+
+const
+
+  xlExcel9795 = $0000002B;
+  xlExcel8 = 56;
+var
+  i, s: Integer;
+  ExlApp, Sheet: OLEVariant;
+  Range, Buffer: Variant;
+  varLink: string;
+begin
+  if sdSalesExcel.Execute then
+    varLink := sdSalesExcel.FileName
+  else
+    abort;
+  Buffer := VarArrayCreate([1, qSalesContents.RecordCount + 2, 1, 10],
+    varVariant);
+  s := 2;
+  Buffer[1, 1] := 'ID';
+  Buffer[1, 2] := 'Товар';
+  Buffer[1, 3] := 'Кол-во';
+  Buffer[1, 4] := 'Цена';
+  Buffer[1, 5] := 'Сумма';
+  Buffer[1, 7] := 'Расходная накладная №' + qSalesID.AsString;
+
+  while not qSalesContents.Eof do
+  begin
+    Buffer[s, 1] := qSalesContentsID.AsString;
+    Buffer[s, 2] := qSalesContentsNAME.AsString;
+    Buffer[s, 3] := qSalesContentsQTY.AsString;
+    Buffer[s, 4] := qSalesContentsPRICE.AsString;
+    Buffer[s, 5] := qSalesContentsSUMM.AsString;
+    qSalesContents.Next;
+  end;
+  qSalesContents.First;
+
+  CoInitialize(Nil);
+
+  ExlApp := CreateOleObject('Excel.Application');
+  ExlApp.Visible := false;
+  ExlApp.Workbooks.Add;
+  Sheet := ExlApp.Workbooks[1].WorkSheets[1];
+  Sheet.name := qSalesID.AsString;
+  Range := ExlApp.Workbooks[1].WorkSheets[1].Range
+    [ExlApp.Workbooks[1].WorkSheets[1].Cells[1, 1],
+    ExlApp.Workbooks[1].WorkSheets[1].Cells[s, 10]];
+  Range.value := Buffer;
+  Sheet.Columns['A:J'].AutoFit;
+  Sheet.rows['2'].select;
+  ExlApp.ActiveWindow.FreezePanes := true;
+  Sheet.Cells[1, 1].select;
+  ExlApp.DisplayAlerts := false;
+  try
+    ExlApp.Workbooks[1].saveas(varLink, 56);
+  except
+    ExlApp.Workbooks[1].saveas(varLink, 43);
+  end;
+
+  ExlApp.Quit;
+  ExlApp := Unassigned;
+  Sheet := Unassigned;
+end;
+
+procedure TFmSales.Button3Click(Sender: TObject);
+begin
+  if (MessageDlg('Удалить позицию ?', mtConfirmation, [mbOK, mbCancel], 0)
+    = mrOK) then
+  begin
+    qSalesContentsDelet.Parameters.ParamByName('VAR_ID_SALES_CONTENTS').value :=
+      qSalesContentsID.value;
+    qSalesContentsDelet.ExecSQL;
+    qSalesContents.Close;
+    qSalesContents.open;
+    qSales.Close;
+    qSales.open;
+  end;
+end;
+
+procedure TFmSales.FormCreate(Sender: TObject);
+begin
+  qSalesContents.open;
+  qSales.open;
+end;
+
+procedure TFmSales.qSalesAfterScroll(DataSet: TDataSet);
+begin
+  qSalesContents.Parameters.ParamByName('VAR_ID_SALES').value := qSalesID.value;
+  qSalesContents.Close;
+  qSalesContents.open;
+end;
+
+end.

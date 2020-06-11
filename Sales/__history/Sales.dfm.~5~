@@ -1,0 +1,331 @@
+object FmSales: TFmSales
+  Left = 0
+  Top = 0
+  Caption = 'FmSales'
+  ClientHeight = 658
+  ClientWidth = 1073
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 1073
+    Height = 658
+    Align = alClient
+    Caption = 'Panel1'
+    TabOrder = 0
+    object gdSales: TDBGrid
+      Left = 1
+      Top = 41
+      Width = 685
+      Height = 616
+      Align = alClient
+      DataSource = dsSales
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'ID'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'DATE'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'CLIENT'
+          Width = 113
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'SUMM'
+          Width = 93
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'DATE_CREATE'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'VARIFICATION'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'DATE_VARIFICATION'
+          Visible = True
+        end>
+    end
+    object Panel2: TPanel
+      Left = 1
+      Top = 1
+      Width = 1071
+      Height = 40
+      Align = alTop
+      TabOrder = 1
+      object DBGrid2: TDBGrid
+        Left = 120
+        Top = 304
+        Width = 320
+        Height = 120
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+      end
+      object btDelete: TButton
+        Left = 121
+        Top = 7
+        Width = 100
+        Height = 25
+        Caption = #1059#1076#1072#1083#1080#1090#1100
+        TabOrder = 1
+      end
+      object btCreate: TButton
+        Left = 15
+        Top = 7
+        Width = 100
+        Height = 25
+        Caption = #1057#1086#1079#1076#1072#1090#1100
+        TabOrder = 2
+      end
+      object Button4: TButton
+        Left = 897
+        Top = 7
+        Width = 100
+        Height = 25
+        Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100
+        TabOrder = 3
+      end
+      object btChange: TButton
+        Left = 227
+        Top = 7
+        Width = 100
+        Height = 25
+        Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100
+        TabOrder = 4
+      end
+      object Button3: TButton
+        Left = 791
+        Top = 7
+        Width = 100
+        Height = 25
+        Caption = #1059#1076#1072#1083#1080#1090#1100
+        TabOrder = 5
+      end
+    end
+    object gdSalesContents: TDBGrid
+      Left = 686
+      Top = 41
+      Width = 386
+      Height = 616
+      Align = alRight
+      DataSource = dsSalesContents
+      TabOrder = 2
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'ID'
+          Width = 56
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'NAME'
+          Width = 79
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'PRICE'
+          Width = 70
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'QTY'
+          Width = 70
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'SUMM'
+          Width = 70
+          Visible = True
+        end>
+    end
+    object Button2: TButton
+      Left = 334
+      Top = 8
+      Width = 100
+      Height = 25
+      Caption = #1042' '#1069#1082#1089#1077#1083#1100
+      TabOrder = 3
+    end
+    object btVarification: TButton
+      Left = 440
+      Top = 8
+      Width = 100
+      Height = 25
+      Caption = #1054#1073#1088#1072#1090#1086#1090#1072#1085
+      TabOrder = 4
+    end
+  end
+  object Button1: TButton
+    Left = 686
+    Top = 8
+    Width = 100
+    Height = 25
+    Caption = #1057#1086#1079#1076#1072#1090#1100
+    TabOrder = 1
+  end
+  object qSales: TADOQuery
+    Connection = cSales
+    CursorType = ctStatic
+    AfterScroll = qSalesAfterScroll
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT'
+      '  s.ID'
+      ' ,s.DATE'
+      ' ,c.NAME CLIENT'
+      ' ,s.SUMM'
+      ' ,s.DATE_CREATE'
+      ' ,s.VARIFICATION'
+      ' ,s.DATE_VARIFICATION'
+      'FROM SALES s JOIN CLIENT c ON s.ID_CLIENT = c.ID')
+    Left = 112
+    Top = 120
+    object qSalesID: TAutoIncField
+      FieldName = 'ID'
+      ReadOnly = True
+    end
+    object qSalesDATE: TDateTimeField
+      DisplayLabel = #1044#1072#1090#1072' '#1086#1087#1077#1088#1072#1094#1080#1080
+      FieldName = 'DATE'
+      Required = True
+      DisplayFormat = 'dd/mm/yyyy'
+    end
+    object qSalesSUMM: TBCDField
+      DisplayLabel = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
+      FieldName = 'SUMM'
+      ReadOnly = True
+      Precision = 19
+    end
+    object qSalesDATE_CREATE: TDateTimeField
+      DisplayLabel = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+      FieldName = 'DATE_CREATE'
+      ReadOnly = True
+    end
+    object qSalesVARIFICATION: TBooleanField
+      DisplayLabel = #10004
+      FieldName = 'VARIFICATION'
+    end
+    object qSalesDATE_VARIFICATION: TDateTimeField
+      DisplayLabel = #1044#1072#1090#1072' '#1087#1088#1086#1074#1086#1076#1082#1080
+      FieldName = 'DATE_VARIFICATION'
+      ReadOnly = True
+    end
+    object qSalesCLIENT: TStringField
+      DisplayLabel = #1050#1083#1080#1077#1085#1090
+      FieldName = 'CLIENT'
+      Size = 50
+    end
+  end
+  object cSales: TADOConnection
+    Connected = True
+    ConnectionString = 
+      'Provider=SQLOLEDB.1;Password=QWErty123;Persist Security Info=Tru' +
+      'e;User ID=SQL;Initial Catalog=MS;Data Source=ec2-3-8-24-250.eu-w' +
+      'est-2.compute.amazonaws.com'
+    Provider = 'SQLOLEDB.1'
+    Left = 24
+    Top = 576
+  end
+  object dsSales: TDataSource
+    DataSet = qSales
+    Left = 56
+    Top = 120
+  end
+  object dsSalesContents: TDataSource
+    DataSet = qSalesContents
+    Left = 824
+    Top = 128
+  end
+  object qSalesContents: TADOQuery
+    Connection = cSales
+    CursorType = ctStatic
+    Parameters = <
+      item
+        Name = 'VAR_ID_SALES'
+        Attributes = [paSigned]
+        DataType = ftInteger
+        Precision = 10
+        Size = 4
+        Value = Null
+      end>
+    SQL.Strings = (
+      'SELECT'
+      '  sc.ID'
+      ' ,sc.ID_SALES'
+      ' ,p.NAME'
+      ' ,sc.QTY'
+      ' ,sc.PRICE'
+      ' ,sc.SUMM'
+      'FROM SALES_CONTENTS sc JOIN PRODUCT p ON sc.ID_PRODUCT = p.ID'
+      'WHERE sc.ID_SALES = :VAR_ID_SALES;')
+    Left = 928
+    Top = 128
+    object qSalesContentsID: TAutoIncField
+      FieldName = 'ID'
+      ReadOnly = True
+    end
+    object qSalesContentsID_SALES: TIntegerField
+      FieldName = 'ID_SALES'
+    end
+    object qSalesContentsNAME: TStringField
+      DisplayLabel = #1058#1086#1074#1072#1088
+      FieldName = 'NAME'
+      Size = 50
+    end
+    object qSalesContentsQTY: TIntegerField
+      DisplayLabel = #1050#1086#1083'-'#1074#1086
+      FieldName = 'QTY'
+    end
+    object qSalesContentsSUMM: TBCDField
+      DisplayLabel = #1057#1091#1084#1084#1072
+      FieldName = 'SUMM'
+      Precision = 19
+    end
+    object qSalesContentsPRICE: TBCDField
+      DisplayLabel = #1057#1090#1086#1080#1084#1086#1089#1090#1100
+      FieldName = 'PRICE'
+      Precision = 19
+    end
+  end
+end

@@ -1,0 +1,20 @@
+program PrSales;
+
+uses
+  Vcl.Forms,
+  uSales in 'uSales.pas' {FmSales},
+  uSalesChange in 'uSalesChange.pas' {fmSalesChange},
+  uSalesContentsChange in 'uSalesContentsChange.pas' {fmSalseContentsChange};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TFmSales, FmSales);
+  Application.CreateForm(TfmSalesChange, fmSalesChange);
+  Application.CreateForm(TfmSalseContentsChange, fmSalseContentsChange);
+  Application.CreateForm(TfmSalesChange, fmSalesChange);
+  Application.CreateForm(TfmSalseContentsChange, fmSalseContentsChange);
+  Application.Run;
+end.5t47ku

@@ -1,0 +1,72 @@
+unit Sales;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Data.Win.ADODB, Vcl.Grids,
+  Vcl.DBGrids, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ComCtrls;
+
+type
+  TFmSales = class(TForm)
+    Panel1: TPanel;
+    gdSales: TDBGrid;
+    Panel2: TPanel;
+    DBGrid2: TDBGrid;
+    gdSalesContents: TDBGrid;
+    qSales: TADOQuery;
+    cSales: TADOConnection;
+    dsSales: TDataSource;
+    qSalesID: TAutoIncField;
+    qSalesDATE: TDateTimeField;
+    qSalesSUMM: TBCDField;
+    qSalesDATE_CREATE: TDateTimeField;
+    qSalesVARIFICATION: TBooleanField;
+    qSalesDATE_VARIFICATION: TDateTimeField;
+    dsSalesContents: TDataSource;
+    qSalesContents: TADOQuery;
+    qSalesContentsID: TAutoIncField;
+    qSalesContentsID_SALES: TIntegerField;
+    qSalesContentsNAME: TStringField;
+    qSalesContentsQTY: TIntegerField;
+    qSalesContentsPRICE: TBCDField;
+    qSalesContentsSUMM: TBCDField;
+    qSalesCLIENT: TStringField;
+    Button1: TButton;
+    btDelete: TButton;
+    btCreate: TButton;
+    Button4: TButton;
+    btChange: TButton;
+    Button2: TButton;
+    Button3: TButton;
+    btVarification: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure qSalesAfterScroll(DataSet: TDataSet);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FmSales: TFmSales;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFmSales.FormCreate(Sender: TObject);
+begin
+  qSalesContents.Open;
+  qSales.Open;
+end;
+
+procedure TFmSales.qSalesAfterScroll(DataSet: TDataSet);
+begin
+  qSalesContents.Parameters.ParamByName('VAR_ID_SALES').Value := qSalesID.Value;
+  qSalesContents.Close;
+  qSalesContents.Open;
+end;
+
+end.
