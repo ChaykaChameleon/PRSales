@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.DBCtrls, Data.DB,
-  Data.Win.ADODB, Vcl.ExtCtrls, Vcl.Mask;
+  Data.Win.ADODB, Vcl.ExtCtrls;
 
 type
   TfmSalesContentsChange = class(TForm)
@@ -40,7 +40,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure btCreateClick(Sender: TObject);
     procedure btChangeClick(Sender: TObject);
-    procedure edPriceKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
   public
@@ -74,22 +73,6 @@ end;
 
 procedure TfmSalesContentsChange.btCreateClick(Sender: TObject);
 begin
-  if qProductID.IsNull then
-  begin
-    showmessage('Выберите товар');
-    abort
-  end;
-  if edPrice.Text = '' then
-  begin
-    showmessage('Введите цену');
-    abort
-  end;
-  if edQTY.Text = '' then
-  begin
-    showmessage('Введите кол-во');
-    abort
-  end;
-
   qCreate.Parameters.ParseSQL(qCreate.SQL.Text, True);
   qCreate.Parameters.ParamByName('VAR_ID_SALES').value :=
     fmSales.qSalesID.value;
@@ -102,13 +85,6 @@ begin
   fmSales.qSales.Close;
   fmSales.qSales.open;
   fmSalesContentsChange.Close;
-end;
-
-procedure TfmSalesContentsChange.edPriceKeyPress(Sender: TObject;
-  var Key: Char);
-begin
-  if not(Key in ['0' .. '9', #8]) then
-    Key := #0;
 end;
 
 procedure TfmSalesContentsChange.FormCreate(Sender: TObject);

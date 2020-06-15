@@ -52,9 +52,7 @@ object fmSalesChange: TfmSalesChange
       Top = 64
       Width = 105
       Height = 21
-      Date = 43991.000000000000000000
-      Format = 'dd-MM-yyyy'
-      Time = 0.934166909719351700
+      Time = 0.934166666666666700
       TabOrder = 1
     end
     object btCreate: TButton

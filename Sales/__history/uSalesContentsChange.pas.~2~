@@ -58,22 +58,6 @@ uses uSales;
 
 procedure TfmSalesContentsChange.btChangeClick(Sender: TObject);
 begin
-  if qProductID.IsNull then
-  begin
-    showmessage('Выберите товар');
-    abort
-  end;
-  if edPrice.Text = '' then
-  begin
-    showmessage('Введите цену');
-    abort
-  end;
-  if edQTY.Text = '' then
-  begin
-    showmessage('Введите кол-во');
-    abort
-  end;
-
   qChange.Parameters.ParseSQL(qChange.SQL.Text, True);
   qChange.Parameters.ParamByName('VAR_ID').value :=
     fmSales.qSalesContentsID.value;

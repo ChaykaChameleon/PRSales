@@ -51,7 +51,6 @@ object fmSalesContentsChange: TfmSalesContentsChange
       Width = 105
       Height = 21
       TabOrder = 0
-      OnKeyPress = edPriceKeyPress
     end
     object edPrice: TEdit
       Left = 168
@@ -59,7 +58,6 @@ object fmSalesContentsChange: TfmSalesContentsChange
       Width = 105
       Height = 21
       TabOrder = 1
-      OnKeyPress = edPriceKeyPress
     end
     object btCreate: TButton
       Left = 31
