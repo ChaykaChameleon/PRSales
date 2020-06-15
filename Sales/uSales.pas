@@ -46,7 +46,6 @@ type
     qSalesDATE_VERIFICATION: TDateTimeField;
     qSalesDATE: TDateTimeField;
     qSalesVetification: TADOQuery;
-    procedure FormCreate(Sender: TObject);
     procedure qSalesAfterScroll(DataSet: TDataSet);
     procedure btSalesExcelClick(Sender: TObject);
     procedure btDeleteClick(Sender: TObject);
@@ -225,12 +224,6 @@ begin
   end;
 end;
 
-procedure TFmSales.FormCreate(Sender: TObject);
-begin
-  qSalesContents.open;
-  qSales.open;
-end;
-
 procedure TFmSales.FormShow(Sender: TObject);
 begin
   if not cSales.Connected then
@@ -239,6 +232,8 @@ begin
     abort;
   end;
 
+  qSalesContents.open;
+  qSales.open;
 end;
 
 procedure TFmSales.gdSalesContentsKeyDown(Sender: TObject; var Key: Word;
@@ -276,9 +271,15 @@ begin
   qSalesContents.open;
 
   if qSalesVERIFICATION.value then
-    btVerification.Font.Style := [fsStrikeOut]
+  begin
+    btVerification.Font.Style := [fsStrikeOut];
+    btSalesContentsCreate.Enabled := false;
+  end
   else
+  begin
     btVerification.Font.Style := [];
+    btSalesContentsCreate.Enabled := true;
+  end;
 
   if qSalesVERIFICATION.value or qSalesID.IsNull then
   begin
