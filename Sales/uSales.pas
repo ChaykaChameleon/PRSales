@@ -221,6 +221,7 @@ begin
     qSales.Close;
     qSales.open;
     fmSalesContentsChange.Close;
+    qSalesContentsAfterScroll(qSalesContents);
   end;
 end;
 
@@ -237,6 +238,7 @@ begin
     showmessage('Данные не подтверждены');
     abort;
   end;
+
 end;
 
 procedure TFmSales.gdSalesContentsKeyDown(Sender: TObject; var Key: Word;
@@ -257,12 +259,17 @@ procedure TFmSales.qSalesAfterOpen(DataSet: TDataSet);
 begin
   if (varRecNo < 0) then
     qSales.RecNo := varRecNo;
+  qSalesAfterScroll(qSales)
 end;
 
 procedure TFmSales.qSalesBeforeClose(DataSet: TDataSet);
 begin
   // showmessage(qSales.RecNo.ToString);
-  varRecNo := qSales.RecNo;
+  try
+    varRecNo := qSales.RecNo;
+  finally
+    varRecNo := 1;
+  end;
 end;
 
 procedure TFmSales.qSalesAfterScroll(DataSet: TDataSet);
@@ -289,6 +296,31 @@ begin
     btSalesContentsChange.Enabled := true;
   end;
 
+  if qSalesContentsID.IsNull then
+  begin
+    btSalesContentsDelete.Enabled := false;
+    btSalesContentsChange.Enabled := false;
+  end
+  else
+  begin
+    btSalesContentsDelete.Enabled := true;
+    btSalesContentsChange.Enabled := true;
+  end;
+
+  if qSalesID.IsNull then
+  begin
+    btDelete.Enabled := false;
+    btChange.Enabled := false;
+    btSalesExcel.Enabled := false;
+
+  end
+  else
+  begin
+    btDelete.Enabled := true;
+    btChange.Enabled := true;
+    btSalesExcel.Enabled := true;
+  end;
+
 end;
 
 procedure TFmSales.qSalesContentsAfterScroll(DataSet: TDataSet);
@@ -307,6 +339,7 @@ begin
       fmSalesContentsChange.edPrice.Text := '';
       fmSalesContentsChange.lcProduct.KeyValue := 1;
     end;
+
 end;
 
 end.
