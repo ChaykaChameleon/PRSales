@@ -1,0 +1,411 @@
+object FmSales: TFmSales
+  Left = 0
+  Top = 0
+  Caption = #1055#1088#1086#1076#1072#1078#1080
+  ClientHeight = 658
+  ClientWidth = 996
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnMain: TPanel
+    Left = 0
+    Top = 0
+    Width = 996
+    Height = 658
+    Align = alClient
+    Caption = 'pnMain'
+    TabOrder = 0
+    object gdSales: TDBGrid
+      Left = 1
+      Top = 41
+      Width = 599
+      Height = 616
+      Align = alClient
+      DataSource = dsSales
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      OnKeyDown = gdSalesKeyDown
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'ID'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'DATE'
+          Width = 90
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'CLIENT'
+          Width = 118
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'DATE_CREATE'
+          Width = 90
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'SUMM'
+          Width = 84
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'VERIFICATION'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'DATE_VERIFICATION'
+          Width = 90
+          Visible = True
+        end>
+    end
+    object pnButton: TPanel
+      Left = 1
+      Top = 1
+      Width = 994
+      Height = 40
+      Align = alTop
+      TabOrder = 1
+      object btDelete: TButton
+        Left = 121
+        Top = 7
+        Width = 100
+        Height = 25
+        Caption = #1059#1076#1072#1083#1080#1090#1100
+        TabOrder = 0
+        OnClick = btDeleteClick
+      end
+      object btCreate: TButton
+        Left = 15
+        Top = 7
+        Width = 100
+        Height = 25
+        Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+        TabOrder = 1
+        OnClick = btCreateClick
+      end
+      object btSalesContentsChange: TButton
+        Left = 811
+        Top = 7
+        Width = 100
+        Height = 25
+        Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100
+        TabOrder = 2
+        OnClick = btSalesContentsChangeClick
+      end
+      object btChange: TButton
+        Left = 227
+        Top = 7
+        Width = 100
+        Height = 25
+        Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100
+        TabOrder = 3
+        OnClick = btChangeClick
+      end
+      object btSalesContentsDelete: TButton
+        Left = 705
+        Top = 7
+        Width = 100
+        Height = 25
+        Caption = #1059#1076#1072#1083#1080#1090#1100
+        TabOrder = 4
+        OnClick = btSalesContentsDeleteClick
+      end
+    end
+    object gdSalesContents: TDBGrid
+      Left = 600
+      Top = 41
+      Width = 395
+      Height = 616
+      Align = alRight
+      DataSource = dsSalesContents
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      TabOrder = 2
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      OnKeyDown = gdSalesContentsKeyDown
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'ID_PRODUCT'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'NAME'
+          Width = 79
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'PRICE'
+          Width = 70
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'QTY'
+          Width = 70
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'SUMM'
+          Width = 70
+          Visible = True
+        end>
+    end
+    object btSalesExcel: TButton
+      Left = 334
+      Top = 8
+      Width = 100
+      Height = 25
+      Caption = #1042' '#1069#1082#1089#1077#1083#1100
+      TabOrder = 3
+      OnClick = btSalesExcelClick
+    end
+    object btVerification: TButton
+      Left = 440
+      Top = 8
+      Width = 100
+      Height = 25
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 4
+      OnClick = btVerificationClick
+    end
+  end
+  object btSalesContentsCreate: TButton
+    Left = 600
+    Top = 8
+    Width = 100
+    Height = 25
+    Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+    TabOrder = 1
+    OnClick = btSalesContentsCreateClick
+  end
+  object qSales: TADOQuery
+    Connection = cSales
+    CursorType = ctStatic
+    AfterOpen = qSalesAfterOpen
+    BeforeClose = qSalesBeforeClose
+    AfterScroll = qSalesAfterScroll
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT'
+      '  s.ID'
+      ' ,s.DATE'
+      ' ,c.NAME CLIENT'
+      ' ,s.SUMM'
+      ' ,s.DATE_CREATE'
+      ' ,s.VERIFICATION'
+      ' ,s.DATE_VERIFICATION'
+      'FROM SALES s JOIN CLIENT c ON s.ID_CLIENT = c.ID')
+    Left = 72
+    Top = 216
+    object qSalesID: TAutoIncField
+      FieldName = 'ID'
+      ReadOnly = True
+    end
+    object qSalesSUMM: TBCDField
+      DisplayLabel = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
+      FieldName = 'SUMM'
+      ReadOnly = True
+      Precision = 19
+    end
+    object qSalesDATE_CREATE: TDateTimeField
+      DisplayLabel = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+      DisplayWidth = 50
+      FieldName = 'DATE_CREATE'
+      ReadOnly = True
+    end
+    object qSalesVERIFICATION: TBooleanField
+      DisplayLabel = #10004
+      FieldName = 'VERIFICATION'
+      ReadOnly = True
+      DisplayValues = #10004
+    end
+    object qSalesCLIENT: TStringField
+      DisplayLabel = #1050#1083#1080#1077#1085#1090
+      FieldName = 'CLIENT'
+      ReadOnly = True
+      Size = 50
+    end
+    object qSalesDATE_VERIFICATION: TDateTimeField
+      DisplayLabel = #1044#1072#1090#1072' '#1086#1073#1088#1072#1073#1086#1090#1082#1080
+      DisplayWidth = 50
+      FieldName = 'DATE_VERIFICATION'
+      ReadOnly = True
+    end
+    object qSalesDATE: TDateTimeField
+      DisplayLabel = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
+      FieldName = 'DATE'
+      ReadOnly = True
+      DisplayFormat = 'dd/mm/yyyy'
+    end
+  end
+  object cSales: TADOConnection
+    ConnectionString = 
+      'Provider=SQLOLEDB.1;Persist Security Info=True;User ID=SQL;Initi' +
+      'al Catalog=MS;Data Source=ec2-3-8-232-3.eu-west-2.compute.amazon' +
+      'aws.com;Use Procedure for Prepare=1;Auto Translate=True;Packet S' +
+      'ize=4096;Workstation ID=DESKTOP-KJ4QJCH;Use Encryption for Data=' +
+      'False;Tag with column collation when possible=False'
+    Provider = 'SQLOLEDB.1'
+    Left = 24
+    Top = 576
+  end
+  object dsSales: TDataSource
+    DataSet = qSales
+    Left = 16
+    Top = 216
+  end
+  object dsSalesContents: TDataSource
+    DataSet = qSalesContents
+    Left = 696
+    Top = 216
+  end
+  object qSalesContents: TADOQuery
+    Connection = cSales
+    CursorType = ctStatic
+    AfterScroll = qSalesContentsAfterScroll
+    Parameters = <
+      item
+        Name = 'VAR_ID_SALES'
+        Attributes = [paSigned]
+        DataType = ftInteger
+        Precision = 10
+        Size = 4
+        Value = Null
+      end>
+    SQL.Strings = (
+      'SELECT'
+      ' p.ID AS ID_PRODUCT'
+      ' ,sc.ID'
+      ' ,sc.ID_SALES'
+      ' ,p.NAME'
+      ' ,sc.QTY'
+      ' ,sc.PRICE'
+      ' ,sc.SUMM'
+      'FROM SALES_CONTENTS sc JOIN PRODUCT p ON sc.ID_PRODUCT = p.ID'
+      'WHERE sc.ID_SALES = :VAR_ID_SALES;')
+    Left = 792
+    Top = 216
+    object qSalesContentsID_SALES: TIntegerField
+      FieldName = 'ID_SALES'
+      ReadOnly = True
+    end
+    object qSalesContentsNAME: TStringField
+      DisplayLabel = #1058#1086#1074#1072#1088
+      FieldName = 'NAME'
+      ReadOnly = True
+      Size = 50
+    end
+    object qSalesContentsQTY: TIntegerField
+      DisplayLabel = #1050#1086#1083'-'#1074#1086
+      FieldName = 'QTY'
+      ReadOnly = True
+    end
+    object qSalesContentsSUMM: TBCDField
+      DisplayLabel = #1057#1091#1084#1084#1072
+      FieldName = 'SUMM'
+      ReadOnly = True
+      Precision = 19
+    end
+    object qSalesContentsPRICE: TBCDField
+      DisplayLabel = #1057#1090#1086#1080#1084#1086#1089#1090#1100
+      FieldName = 'PRICE'
+      ReadOnly = True
+      Precision = 19
+    end
+    object qSalesContentsID_PRODUCT: TAutoIncField
+      DisplayLabel = 'ID '#1090#1086#1074#1072#1088#1072
+      FieldName = 'ID_PRODUCT'
+      ReadOnly = True
+    end
+    object qSalesContentsID: TAutoIncField
+      FieldName = 'ID'
+      ReadOnly = True
+    end
+  end
+  object sdSalesExcel: TSaveDialog
+    DefaultExt = 'xlsx'
+    Filter = 'Excel file|*.xls;*.xlsx'
+    Left = 376
+    Top = 80
+  end
+  object qSalesDelet: TADOQuery
+    Connection = cSales
+    Parameters = <
+      item
+        Name = 'VAR_ID_SALES'
+        Size = -1
+        Value = Null
+      end>
+    SQL.Strings = (
+      'DELETE SALES  WHERE ID = :VAR_ID_SALES')
+    Left = 160
+    Top = 80
+  end
+  object qSalesContentsDelet: TADOQuery
+    Connection = cSales
+    Parameters = <
+      item
+        Name = 'VAR_ID_SALES_CONTENTS'
+        DataType = ftInteger
+        Precision = 10
+        Size = 4
+        Value = Null
+      end>
+    SQL.Strings = (
+      'DELETE SALES_CONTENTS WHERE ID = :VAR_ID_SALES_CONTENTS ')
+    Left = 816
+    Top = 88
+  end
+  object qSalesVetification: TADOQuery
+    Connection = cSales
+    Parameters = <
+      item
+        Name = 'VAR_ID_SALES'
+        Attributes = [paSigned]
+        DataType = ftInteger
+        Precision = 10
+        Size = 4
+        Value = Null
+      end>
+    SQL.Strings = (
+      'UPDATE SALES'
+      'SET VERIFICATION = ABS(VERIFICATION - 1)'
+      'WHERE ID = :VAR_ID_SALES;')
+    Left = 504
+    Top = 80
+  end
+end
