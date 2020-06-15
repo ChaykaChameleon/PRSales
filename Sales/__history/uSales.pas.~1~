@@ -59,6 +59,11 @@ type
     procedure qSalesContentsAfterScroll(DataSet: TDataSet);
     procedure qSalesBeforeClose(DataSet: TDataSet);
     procedure qSalesAfterOpen(DataSet: TDataSet);
+    procedure gdSalesKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure gdSalesContentsKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -80,7 +85,6 @@ begin
   fmSalesChange.show;
   fmSalesChange.btCreate.Visible := false;
   fmSalesChange.btChange.Visible := true;
-
 end;
 
 procedure TFmSales.btCreateClick(Sender: TObject);
@@ -218,6 +222,29 @@ procedure TFmSales.FormCreate(Sender: TObject);
 begin
   qSalesContents.open;
   qSales.open;
+end;
+
+procedure TFmSales.FormShow(Sender: TObject);
+begin
+  if not cSales.Connected then
+  begin
+    showmessage('Данные не подтверждены');
+    abort;
+  end;
+end;
+
+procedure TFmSales.gdSalesContentsKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Key = 46) and (ssCtrl in Shift) then
+    abort;
+end;
+
+procedure TFmSales.gdSalesKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Key = 46) and (ssCtrl in Shift) then
+    abort;
 end;
 
 procedure TFmSales.qSalesAfterOpen(DataSet: TDataSet);

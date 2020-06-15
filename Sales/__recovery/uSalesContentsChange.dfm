@@ -1,4 +1,4 @@
-object fmSalseContentsChange: TfmSalseContentsChange
+object fmSalesContentsChange: TfmSalesContentsChange
   Left = 0
   Top = 0
   Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1090#1086#1074#1072#1088#1072#1084#1080
@@ -11,6 +11,7 @@ object fmSalseContentsChange: TfmSalseContentsChange
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poMainFormCenter
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -31,32 +32,34 @@ object fmSalseContentsChange: TfmSalseContentsChange
       Caption = #1058#1086#1074#1072#1088
     end
     object lbQTY: TLabel
-      Left = 32
-      Top = 64
+      Left = 35
+      Top = 107
       Width = 35
       Height = 13
       Caption = #1050#1086#1083'-'#1074#1086
     end
     object lbPrice: TLabel
-      Left = 32
-      Top = 105
+      Left = 35
+      Top = 67
       Width = 26
       Height = 13
       Caption = #1062#1077#1085#1072
     end
     object edQTY: TEdit
       Left = 168
-      Top = 61
+      Top = 104
       Width = 105
       Height = 21
       TabOrder = 0
+      OnKeyPress = edPriceKeyPress
     end
     object edPrice: TEdit
       Left = 168
-      Top = 102
+      Top = 64
       Width = 105
       Height = 21
       TabOrder = 1
+      OnKeyPress = edPriceKeyPress
     end
     object btCreate: TButton
       Left = 31

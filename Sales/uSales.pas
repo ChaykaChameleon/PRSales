@@ -63,6 +63,7 @@ type
       Shift: TShiftState);
     procedure gdSalesContentsKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -128,11 +129,17 @@ const
   xlExcel9795 = $0000002B;
   xlExcel8 = 56;
 var
-  i, s: Integer;
+  s: Integer;
   ExlApp, Sheet: OLEVariant;
   Range, Buffer: Variant;
   varLink: string;
 begin
+  if qSalesContentsID.IsNull then
+  begin
+    showmessage('В продаже нет товра');
+    abort;
+  end;
+
   if sdSalesExcel.Execute then
     varLink := sdSalesExcel.FileName
   else
@@ -223,6 +230,15 @@ begin
   qSales.open;
 end;
 
+procedure TFmSales.FormShow(Sender: TObject);
+begin
+  if not cSales.Connected then
+  begin
+    showmessage('Данные не подтверждены');
+    abort;
+  end;
+end;
+
 procedure TFmSales.gdSalesContentsKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -239,8 +255,14 @@ end;
 
 procedure TFmSales.qSalesAfterOpen(DataSet: TDataSet);
 begin
-  if varRecNo <> 0 then
+  if (varRecNo < 0) then
     qSales.RecNo := varRecNo;
+end;
+
+procedure TFmSales.qSalesBeforeClose(DataSet: TDataSet);
+begin
+  // showmessage(qSales.RecNo.ToString);
+  varRecNo := qSales.RecNo;
 end;
 
 procedure TFmSales.qSalesAfterScroll(DataSet: TDataSet);
@@ -267,11 +289,6 @@ begin
     btSalesContentsChange.Enabled := true;
   end;
 
-end;
-
-procedure TFmSales.qSalesBeforeClose(DataSet: TDataSet);
-begin
-  varRecNo := qSales.RecNo;
 end;
 
 procedure TFmSales.qSalesContentsAfterScroll(DataSet: TDataSet);

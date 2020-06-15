@@ -29,12 +29,14 @@ object FmSales: TFmSales
       Height = 616
       Align = alClient
       DataSource = dsSales
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -11
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
+      OnKeyDown = gdSalesKeyDown
       Columns = <
         item
           Expanded = False
@@ -137,12 +139,14 @@ object FmSales: TFmSales
       Height = 616
       Align = alRight
       DataSource = dsSalesContents
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
       TabOrder = 2
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -11
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
+      OnKeyDown = gdSalesContentsKeyDown
       Columns = <
         item
           Expanded = False
@@ -188,7 +192,13 @@ object FmSales: TFmSales
       Top = 8
       Width = 100
       Height = 25
-      Caption = #1054#1073#1088#1072#1090#1086#1090#1072#1085
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 4
       OnClick = btVerificationClick
     end
@@ -236,7 +246,6 @@ object FmSales: TFmSales
       DisplayWidth = 50
       FieldName = 'DATE_CREATE'
       ReadOnly = True
-      DisplayFormat = 'dd/mm/yyyy'
     end
     object qSalesVERIFICATION: TBooleanField
       DisplayLabel = #10004
@@ -255,7 +264,6 @@ object FmSales: TFmSales
       DisplayWidth = 50
       FieldName = 'DATE_VERIFICATION'
       ReadOnly = True
-      DisplayFormat = 'dd/mm/yyyy'
     end
     object qSalesDATE: TDateTimeField
       DisplayLabel = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
@@ -265,11 +273,12 @@ object FmSales: TFmSales
     end
   end
   object cSales: TADOConnection
-    Connected = True
     ConnectionString = 
-      'Provider=SQLOLEDB.1;Password=QWErty123;Persist Security Info=Tru' +
-      'e;User ID=SQL;Initial Catalog=MS;Data Source=ec2-3-8-232-3.eu-we' +
-      'st-2.compute.amazonaws.com'
+      'Provider=SQLOLEDB.1;Persist Security Info=True;User ID=SQL;Initi' +
+      'al Catalog=MS;Data Source=ec2-3-8-232-3.eu-west-2.compute.amazon' +
+      'aws.com;Use Procedure for Prepare=1;Auto Translate=True;Packet S' +
+      'ize=4096;Workstation ID=DESKTOP-KJ4QJCH;Use Encryption for Data=' +
+      'False;Tag with column collation when possible=False'
     Provider = 'SQLOLEDB.1'
     Left = 24
     Top = 576
@@ -285,7 +294,6 @@ object FmSales: TFmSales
     Top = 216
   end
   object qSalesContents: TADOQuery
-    Active = True
     Connection = cSales
     CursorType = ctStatic
     AfterScroll = qSalesContentsAfterScroll
@@ -313,24 +321,29 @@ object FmSales: TFmSales
     Top = 216
     object qSalesContentsID_SALES: TIntegerField
       FieldName = 'ID_SALES'
+      ReadOnly = True
     end
     object qSalesContentsNAME: TStringField
       DisplayLabel = #1058#1086#1074#1072#1088
       FieldName = 'NAME'
+      ReadOnly = True
       Size = 50
     end
     object qSalesContentsQTY: TIntegerField
       DisplayLabel = #1050#1086#1083'-'#1074#1086
       FieldName = 'QTY'
+      ReadOnly = True
     end
     object qSalesContentsSUMM: TBCDField
       DisplayLabel = #1057#1091#1084#1084#1072
       FieldName = 'SUMM'
+      ReadOnly = True
       Precision = 19
     end
     object qSalesContentsPRICE: TBCDField
       DisplayLabel = #1057#1090#1086#1080#1084#1086#1089#1090#1100
       FieldName = 'PRICE'
+      ReadOnly = True
       Precision = 19
     end
     object qSalesContentsID_PRODUCT: TAutoIncField

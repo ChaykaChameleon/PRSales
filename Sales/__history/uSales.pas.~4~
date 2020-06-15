@@ -20,7 +20,7 @@ type
     dsSales: TDataSource;
     qSalesID: TAutoIncField;
     qSalesSUMM: TBCDField;
-    qSalesVARIFICATION: TBooleanField;
+    qSalesVERIFICATION: TBooleanField;
     dsSalesContents: TDataSource;
     qSalesContents: TADOQuery;
     qSalesContentsID_SALES: TIntegerField;
@@ -36,17 +36,16 @@ type
     btChange: TButton;
     btSalesExcel: TButton;
     btSalesContentsDelete: TButton;
-    btVarification: TButton;
+    btVerification: TButton;
     sdSalesExcel: TSaveDialog;
     qSalesDelet: TADOQuery;
     qSalesContentsDelet: TADOQuery;
     qSalesContentsID_PRODUCT: TAutoIncField;
     qSalesContentsID: TAutoIncField;
     qSalesDATE_CREATE: TDateTimeField;
-    qSalesDATE_VARIFICATION: TDateTimeField;
+    qSalesDATE_VERIFICATION: TDateTimeField;
     qSalesDATE: TDateTimeField;
-    cbSales: TCheckBox;
-    qSalesVatification: TADOQuery;
+    qSalesVetification: TADOQuery;
     procedure FormCreate(Sender: TObject);
     procedure qSalesAfterScroll(DataSet: TDataSet);
     procedure btSalesExcelClick(Sender: TObject);
@@ -54,9 +53,17 @@ type
     procedure btSalesContentsDeleteClick(Sender: TObject);
     procedure btCreateClick(Sender: TObject);
     procedure btChangeClick(Sender: TObject);
-    procedure gdSalesDrawColumnCell(Sender: TObject; const Rect: TRect;
-      DataCol: Integer; Column: TColumn; State: TGridDrawState);
-    procedure btVarificationClick(Sender: TObject);
+    procedure btVerificationClick(Sender: TObject);
+    procedure btSalesContentsCreateClick(Sender: TObject);
+    procedure btSalesContentsChangeClick(Sender: TObject);
+    procedure qSalesContentsAfterScroll(DataSet: TDataSet);
+    procedure qSalesBeforeClose(DataSet: TDataSet);
+    procedure qSalesAfterOpen(DataSet: TDataSet);
+    procedure gdSalesKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure gdSalesContentsKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -65,19 +72,19 @@ type
 
 var
   FmSales: TFmSales;
+  varRecNo: Integer;
 
 implementation
 
 {$R *.dfm}
 
-uses uSaleschange;
+uses uSaleschange, uSalesContentsChange;
 
 procedure TFmSales.btChangeClick(Sender: TObject);
 begin
   fmSalesChange.show;
   fmSalesChange.btCreate.Visible := false;
   fmSalesChange.btChange.Visible := true;
-
 end;
 
 procedure TFmSales.btCreateClick(Sender: TObject);
@@ -96,18 +103,23 @@ begin
     qSalesDelet.ExecSQL;
     qSales.Close;
     qSales.open;
+    fmSalesChange.Close;
   end;
 
 end;
 
-procedure TFmSales.btVarificationClick(Sender: TObject);
+procedure TFmSales.btVerificationClick(Sender: TObject);
 begin
-  qSalesVatification.Parameters.ParamByName('VAR_ID_SALES').value :=
-    qSalesID.value;
-  qSalesVatification.ExecSQL;
-  qSales.Close;
-  qSales.open;
-  cbSales.checked := qSalesVARIFICATION.value;
+  if (MessageDlg('Записать измененя?', mtConfirmation, [mbOK, mbCancel], 0)
+    = mrOK) then
+  begin
+    qSalesVetification.Parameters.ParamByName('VAR_ID_SALES').value :=
+      qSalesID.value;
+    qSalesVetification.ExecSQL;
+    qSales.Close;
+    qSales.open;
+  end;
+
 end;
 
 procedure TFmSales.btSalesExcelClick(Sender: TObject);
@@ -117,11 +129,17 @@ const
   xlExcel9795 = $0000002B;
   xlExcel8 = 56;
 var
-  i, s: Integer;
+   s: Integer;
   ExlApp, Sheet: OLEVariant;
   Range, Buffer: Variant;
   varLink: string;
 begin
+  if qSalesContentsID.IsNull then
+  begin
+    showmessage('В продаже нет товра');
+    abort;
+  end;
+
   if sdSalesExcel.Execute then
     varLink := sdSalesExcel.FileName
   else
@@ -174,6 +192,22 @@ begin
   Sheet := Unassigned;
 end;
 
+procedure TFmSales.btSalesContentsChangeClick(Sender: TObject);
+begin
+  fmSalesContentsChange.show;
+  fmSalesContentsChange.btCreate.Visible := false;
+  fmSalesContentsChange.btChange.Visible := true;
+  qSalesContentsAfterScroll(qSalesContents);
+end;
+
+procedure TFmSales.btSalesContentsCreateClick(Sender: TObject);
+begin
+  fmSalesContentsChange.show;
+  fmSalesContentsChange.btCreate.Visible := true;
+  fmSalesContentsChange.btChange.Visible := false;
+  qSalesContentsAfterScroll(qSalesContents);
+end;
+
 procedure TFmSales.btSalesContentsDeleteClick(Sender: TObject);
 begin
   if (MessageDlg('Удалить позицию ?', mtConfirmation, [mbOK, mbCancel], 0)
@@ -186,6 +220,7 @@ begin
     qSalesContents.open;
     qSales.Close;
     qSales.open;
+    fmSalesContentsChange.Close;
   end;
 end;
 
@@ -195,20 +230,39 @@ begin
   qSales.open;
 end;
 
-procedure TFmSales.gdSalesDrawColumnCell(Sender: TObject; const Rect: TRect;
-  DataCol: Integer; Column: TColumn; State: TGridDrawState);
+procedure TFmSales.FormShow(Sender: TObject);
 begin
-  if Column.FieldName = 'VARIFICATION' then
-    with cbSales do
-    begin
-      left := Rect.left + gdSales.left + 3;
-      top := Rect.top + gdSales.top + 1;
-      width := Rect.width;
-      color := gdSales.color;
-      checked := self.qSalesVARIFICATION.value;
-      Visible := true;
-    end;
+  if not cSales.Connected then
+  begin
+    showmessage('Данные не подтверждены');
+    abort;
+  end;
+end;
 
+procedure TFmSales.gdSalesContentsKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Key = 46) and (ssCtrl in Shift) then
+    abort;
+end;
+
+procedure TFmSales.gdSalesKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Key = 46) and (ssCtrl in Shift) then
+    abort;
+end;
+
+procedure TFmSales.qSalesAfterOpen(DataSet: TDataSet);
+begin
+  if (varRecNo < 0) then
+    qSales.RecNo := varRecNo;
+end;
+
+procedure TFmSales.qSalesBeforeClose(DataSet: TDataSet);
+begin
+  // showmessage(qSales.RecNo.ToString);
+  varRecNo := qSales.RecNo;
 end;
 
 procedure TFmSales.qSalesAfterScroll(DataSet: TDataSet);
@@ -216,8 +270,9 @@ begin
   qSalesContents.Parameters.ParamByName('VAR_ID_SALES').value := qSalesID.value;
   qSalesContents.Close;
   qSalesContents.open;
-  if qSalesVARIFICATION.value then
+  if qSalesVERIFICATION.value then
   begin
+    btVerification.Font.Style := [fsStrikeOut];
     btDelete.Enabled := false;
     btChange.Enabled := false;
     btSalesContentsCreate.Enabled := false;
@@ -226,6 +281,7 @@ begin
   end
   else
   begin
+    btVerification.Font.Style := [];
     btDelete.Enabled := true;
     btChange.Enabled := true;
     btSalesContentsCreate.Enabled := true;
@@ -233,6 +289,24 @@ begin
     btSalesContentsChange.Enabled := true;
   end;
 
+end;
+
+procedure TFmSales.qSalesContentsAfterScroll(DataSet: TDataSet);
+begin
+  if assigned(fmSalesContentsChange) then
+    if fmSalesContentsChange.btChange.Visible then
+    begin
+      fmSalesContentsChange.edQTY.Text := qSalesContentsQTY.AsString;
+      fmSalesContentsChange.edPrice.Text := qSalesContentsPRICE.AsString;
+      fmSalesContentsChange.lcProduct.KeyValue :=
+        qSalesContentsID_PRODUCT.AsString;
+    end
+    else
+    begin
+      fmSalesContentsChange.edQTY.Text := '';
+      fmSalesContentsChange.edPrice.Text := '';
+      fmSalesContentsChange.lcProduct.KeyValue := 1;
+    end;
 end;
 
 end.

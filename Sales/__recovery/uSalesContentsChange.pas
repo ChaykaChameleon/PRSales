@@ -6,10 +6,10 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.DBCtrls, Data.DB,
-  Data.Win.ADODB, Vcl.ExtCtrls;
+  Data.Win.ADODB, Vcl.ExtCtrls, Vcl.Mask;
 
 type
-  TfmSalseContentsChange = class(TForm)
+  TfmSalesContentsChange = class(TForm)
     pnMain: TPanel;
     qSalesContents: TADOQuery;
     qSalesContentsID_SALES: TIntegerField;
@@ -40,6 +40,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure btCreateClick(Sender: TObject);
     procedure btChangeClick(Sender: TObject);
+    procedure edPriceKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
   public
@@ -47,7 +48,7 @@ type
   end;
 
 var
-  fmSalseContentsChange: TfmSalseContentsChange;
+  fmSalesContentsChange: TfmSalesContentsChange;
 
 implementation
 
@@ -55,7 +56,7 @@ implementation
 
 uses uSales;
 
-procedure TfmSalseContentsChange.btChangeClick(Sender: TObject);
+procedure TfmSalesContentsChange.btChangeClick(Sender: TObject);
 begin
   qChange.Parameters.ParseSQL(qChange.SQL.Text, True);
   qChange.Parameters.ParamByName('VAR_ID').value :=
@@ -68,11 +69,27 @@ begin
   fmSales.qSalesContents.open;
   fmSales.qSales.Close;
   fmSales.qSales.open;
-  fmSalseContentsChange.Close;
+  fmSalesContentsChange.Close;
 end;
 
-procedure TfmSalseContentsChange.btCreateClick(Sender: TObject);
+procedure TfmSalesContentsChange.btCreateClick(Sender: TObject);
 begin
+  if qProductID.IsNull then
+  begin
+    showmessage('Выберите товар');
+    abort
+  end;
+  if edPrice.Text = '' then
+  begin
+    showmessage('Введите цену');
+    abort
+  end;
+  if edQTY.Text = '' then
+  begin
+    showmessage('Введите кол-во');
+    abort
+  end;
+
   qCreate.Parameters.ParseSQL(qCreate.SQL.Text, True);
   qCreate.Parameters.ParamByName('VAR_ID_SALES').value :=
     fmSales.qSalesID.value;
@@ -84,10 +101,17 @@ begin
   fmSales.qSalesContents.open;
   fmSales.qSales.Close;
   fmSales.qSales.open;
-  fmSalseContentsChange.Close;
+  fmSalesContentsChange.Close;
 end;
 
-procedure TfmSalseContentsChange.FormCreate(Sender: TObject);
+procedure TfmSalesContentsChange.edPriceKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  if not(Key in ['0' .. '9', #8]) then
+    Key := #0;
+end;
+
+procedure TfmSalesContentsChange.FormCreate(Sender: TObject);
 begin
   qProduct.open;
   lcProduct.KeyValue := qProduct.FieldByName(lcProduct.KeyField).value;

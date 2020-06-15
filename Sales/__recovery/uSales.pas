@@ -63,6 +63,7 @@ type
       Shift: TShiftState);
     procedure gdSalesContentsKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -84,7 +85,6 @@ begin
   fmSalesChange.show;
   fmSalesChange.btCreate.Visible := false;
   fmSalesChange.btChange.Visible := true;
-
 end;
 
 procedure TFmSales.btCreateClick(Sender: TObject);
@@ -96,7 +96,7 @@ end;
 
 procedure TFmSales.btDeleteClick(Sender: TObject);
 begin
-  if (MessageDlg('Удалить позицию ?', mtConfirmation, [mbOK, mbCancel], 0)
+  if (MessageDlg('РЈРґР°Р»РёС‚СЊ РїРѕР·РёС†РёСЋ ?', mtConfirmation, [mbOK, mbCancel], 0)
     = mrOK) then
   begin
     qSalesDelet.Parameters.ParamByName('VAR_ID_SALES').value := qSalesID.value;
@@ -110,7 +110,7 @@ end;
 
 procedure TFmSales.btVerificationClick(Sender: TObject);
 begin
-  if (MessageDlg('Записать измененя?', mtConfirmation, [mbOK, mbCancel], 0)
+  if (MessageDlg('Р—Р°РїРёСЃР°С‚СЊ РёР·РјРµРЅРµРЅСЏ?', mtConfirmation, [mbOK, mbCancel], 0)
     = mrOK) then
   begin
     qSalesVetification.Parameters.ParamByName('VAR_ID_SALES').value :=
@@ -129,11 +129,17 @@ const
   xlExcel9795 = $0000002B;
   xlExcel8 = 56;
 var
-  i, s: Integer;
+  s: Integer;
   ExlApp, Sheet: OLEVariant;
   Range, Buffer: Variant;
   varLink: string;
 begin
+  if qSalesContentsID.IsNull then
+  begin
+    showmessage('Р’ РїСЂРѕРґР°Р¶Рµ РЅРµС‚ С‚РѕРІСЂР°');
+    abort;
+  end;
+
   if sdSalesExcel.Execute then
     varLink := sdSalesExcel.FileName
   else
@@ -142,11 +148,11 @@ begin
     varVariant);
   s := 2;
   Buffer[1, 1] := 'ID';
-  Buffer[1, 2] := 'Товар';
-  Buffer[1, 3] := 'Кол-во';
-  Buffer[1, 4] := 'Цена';
-  Buffer[1, 5] := 'Сумма';
-  Buffer[1, 7] := 'Расходная накладная №' + qSalesID.AsString;
+  Buffer[1, 2] := 'РўРѕРІР°СЂ';
+  Buffer[1, 3] := 'РљРѕР»-РІРѕ';
+  Buffer[1, 4] := 'Р¦РµРЅР°';
+  Buffer[1, 5] := 'РЎСѓРјРјР°';
+  Buffer[1, 7] := 'Р Р°СЃС…РѕРґРЅР°СЏ РЅР°РєР»Р°РґРЅР°СЏ в„–' + qSalesID.AsString;
 
   while not qSalesContents.Eof do
   begin
@@ -204,7 +210,7 @@ end;
 
 procedure TFmSales.btSalesContentsDeleteClick(Sender: TObject);
 begin
-  if (MessageDlg('Удалить позицию ?', mtConfirmation, [mbOK, mbCancel], 0)
+  if (MessageDlg('РЈРґР°Р»РёС‚СЊ РїРѕР·РёС†РёСЋ ?', mtConfirmation, [mbOK, mbCancel], 0)
     = mrOK) then
   begin
     qSalesContentsDelet.Parameters.ParamByName('VAR_ID_SALES_CONTENTS').value :=
@@ -215,6 +221,7 @@ begin
     qSales.Close;
     qSales.open;
     fmSalesContentsChange.Close;
+    qSalesContentsAfterScroll(qSalesContents);
   end;
 end;
 
@@ -222,6 +229,16 @@ procedure TFmSales.FormCreate(Sender: TObject);
 begin
   qSalesContents.open;
   qSales.open;
+end;
+
+procedure TFmSales.FormShow(Sender: TObject);
+begin
+  if not cSales.Connected then
+  begin
+    showmessage('Р”Р°РЅРЅС‹Рµ РЅРµ РїРѕРґС‚РІРµСЂР¶РґРµРЅС‹');
+    abort;
+  end;
+
 end;
 
 procedure TFmSales.gdSalesContentsKeyDown(Sender: TObject; var Key: Word;
@@ -240,8 +257,18 @@ end;
 
 procedure TFmSales.qSalesAfterOpen(DataSet: TDataSet);
 begin
-  if varRecNo <> 0 then
+  if (varRecNo < 0) then
     qSales.RecNo := varRecNo;
+end;
+
+procedure TFmSales.qSalesBeforeClose(DataSet: TDataSet);
+begin
+  // showmessage(qSales.RecNo.ToString);
+  try
+    varRecNo := qSales.RecNo;
+  finally
+    varRecNo := 1;
+  end;
 end;
 
 procedure TFmSales.qSalesAfterScroll(DataSet: TDataSet);
@@ -268,11 +295,17 @@ begin
     btSalesContentsChange.Enabled := true;
   end;
 
-end;
+  if qSalesContentsID.IsNull then
+  begin
+    btSalesContentsDelete.Enabled := false;
+    btSalesContentsChange.Enabled := false;
+  end
+  else
+  begin
+    btSalesContentsDelete.Enabled := true;
+    btSalesContentsChange.Enabled := true;
+  end;
 
-procedure TFmSales.qSalesBeforeClose(DataSet: TDataSet);
-begin
-  varRecNo := qSales.RecNo;
 end;
 
 procedure TFmSales.qSalesContentsAfterScroll(DataSet: TDataSet);
@@ -291,6 +324,7 @@ begin
       fmSalesContentsChange.edPrice.Text := '';
       fmSalesContentsChange.lcProduct.KeyValue := 1;
     end;
+
 end;
 
 end.

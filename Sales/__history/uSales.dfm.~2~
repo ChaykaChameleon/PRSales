@@ -1,7 +1,7 @@
 object FmSales: TFmSales
   Left = 0
   Top = 0
-  Caption = 'FmSales'
+  Caption = #1055#1088#1086#1076#1072#1078#1080
   ClientHeight = 658
   ClientWidth = 996
   Color = clBtnFace
@@ -29,12 +29,14 @@ object FmSales: TFmSales
       Height = 616
       Align = alClient
       DataSource = dsSales
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -11
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
+      OnKeyDown = gdSalesKeyDown
       Columns = <
         item
           Expanded = False
@@ -67,12 +69,12 @@ object FmSales: TFmSales
         end
         item
           Expanded = False
-          FieldName = 'VARIFICATION'
+          FieldName = 'VERIFICATION'
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'DATE_VARIFICATION'
+          FieldName = 'DATE_VERIFICATION'
           Width = 90
           Visible = True
         end>
@@ -137,12 +139,14 @@ object FmSales: TFmSales
       Height = 616
       Align = alRight
       DataSource = dsSalesContents
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
       TabOrder = 2
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -11
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
+      OnKeyDown = gdSalesContentsKeyDown
       Columns = <
         item
           Expanded = False
@@ -183,14 +187,20 @@ object FmSales: TFmSales
       TabOrder = 3
       OnClick = btSalesExcelClick
     end
-    object btVarification: TButton
+    object btVerification: TButton
       Left = 440
       Top = 8
       Width = 100
       Height = 25
-      Caption = #1054#1073#1088#1072#1090#1086#1090#1072#1085
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 4
-      OnClick = btVarificationClick
+      OnClick = btVerificationClick
     end
   end
   object btSalesContentsCreate: TButton
@@ -203,9 +213,10 @@ object FmSales: TFmSales
     OnClick = btSalesContentsCreateClick
   end
   object qSales: TADOQuery
-    Active = True
     Connection = cSales
     CursorType = ctStatic
+    AfterOpen = qSalesAfterOpen
+    BeforeClose = qSalesBeforeClose
     AfterScroll = qSalesAfterScroll
     Parameters = <>
     SQL.Strings = (
@@ -215,8 +226,8 @@ object FmSales: TFmSales
       ' ,c.NAME CLIENT'
       ' ,s.SUMM'
       ' ,s.DATE_CREATE'
-      ' ,s.VARIFICATION'
-      ' ,s.DATE_VARIFICATION'
+      ' ,s.VERIFICATION'
+      ' ,s.DATE_VERIFICATION'
       'FROM SALES s JOIN CLIENT c ON s.ID_CLIENT = c.ID')
     Left = 72
     Top = 216
@@ -237,9 +248,9 @@ object FmSales: TFmSales
       ReadOnly = True
       DisplayFormat = 'dd/mm/yyyy'
     end
-    object qSalesVARIFICATION: TBooleanField
+    object qSalesVERIFICATION: TBooleanField
       DisplayLabel = #10004
-      FieldName = 'VARIFICATION'
+      FieldName = 'VERIFICATION'
       ReadOnly = True
       DisplayValues = #10004
     end
@@ -249,10 +260,10 @@ object FmSales: TFmSales
       ReadOnly = True
       Size = 50
     end
-    object qSalesDATE_VARIFICATION: TDateTimeField
+    object qSalesDATE_VERIFICATION: TDateTimeField
       DisplayLabel = #1044#1072#1090#1072' '#1086#1073#1088#1072#1073#1086#1090#1082#1080
       DisplayWidth = 50
-      FieldName = 'DATE_VARIFICATION'
+      FieldName = 'DATE_VERIFICATION'
       ReadOnly = True
       DisplayFormat = 'dd/mm/yyyy'
     end
@@ -264,11 +275,12 @@ object FmSales: TFmSales
     end
   end
   object cSales: TADOConnection
-    Connected = True
     ConnectionString = 
-      'Provider=SQLOLEDB.1;Password=QWErty123;Persist Security Info=Tru' +
-      'e;User ID=SQL;Initial Catalog=MS;Data Source=ec2-3-8-232-3.eu-we' +
-      'st-2.compute.amazonaws.com'
+      'Provider=SQLOLEDB.1;Persist Security Info=False;User ID=SQL;Init' +
+      'ial Catalog=MS;Data Source=ec2-3-8-232-3.eu-west-2.compute.amazo' +
+      'naws.com;Use Procedure for Prepare=1;Auto Translate=True;Packet ' +
+      'Size=4096;Workstation ID=DESKTOP-KJ4QJCH;Use Encryption for Data' +
+      '=False;Tag with column collation when possible=False'
     Provider = 'SQLOLEDB.1'
     Left = 24
     Top = 576
@@ -284,7 +296,6 @@ object FmSales: TFmSales
     Top = 216
   end
   object qSalesContents: TADOQuery
-    Active = True
     Connection = cSales
     CursorType = ctStatic
     AfterScroll = qSalesContentsAfterScroll
@@ -312,24 +323,29 @@ object FmSales: TFmSales
     Top = 216
     object qSalesContentsID_SALES: TIntegerField
       FieldName = 'ID_SALES'
+      ReadOnly = True
     end
     object qSalesContentsNAME: TStringField
       DisplayLabel = #1058#1086#1074#1072#1088
       FieldName = 'NAME'
+      ReadOnly = True
       Size = 50
     end
     object qSalesContentsQTY: TIntegerField
       DisplayLabel = #1050#1086#1083'-'#1074#1086
       FieldName = 'QTY'
+      ReadOnly = True
     end
     object qSalesContentsSUMM: TBCDField
       DisplayLabel = #1057#1091#1084#1084#1072
       FieldName = 'SUMM'
+      ReadOnly = True
       Precision = 19
     end
     object qSalesContentsPRICE: TBCDField
       DisplayLabel = #1057#1090#1086#1080#1084#1086#1089#1090#1100
       FieldName = 'PRICE'
+      ReadOnly = True
       Precision = 19
     end
     object qSalesContentsID_PRODUCT: TAutoIncField
@@ -376,7 +392,7 @@ object FmSales: TFmSales
     Left = 816
     Top = 88
   end
-  object qSalesVatification: TADOQuery
+  object qSalesVetification: TADOQuery
     Connection = cSales
     Parameters = <
       item
@@ -389,7 +405,7 @@ object FmSales: TFmSales
       end>
     SQL.Strings = (
       'UPDATE SALES'
-      'SET VARIFICATION = ABS(VARIFICATION - 1)'
+      'SET VERIFICATION = ABS(VERIFICATION - 1)'
       'WHERE ID = :VAR_ID_SALES;')
     Left = 504
     Top = 80

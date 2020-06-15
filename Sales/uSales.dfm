@@ -246,7 +246,6 @@ object FmSales: TFmSales
       DisplayWidth = 50
       FieldName = 'DATE_CREATE'
       ReadOnly = True
-      DisplayFormat = 'dd/mm/yyyy'
     end
     object qSalesVERIFICATION: TBooleanField
       DisplayLabel = #10004
@@ -265,7 +264,6 @@ object FmSales: TFmSales
       DisplayWidth = 50
       FieldName = 'DATE_VERIFICATION'
       ReadOnly = True
-      DisplayFormat = 'dd/mm/yyyy'
     end
     object qSalesDATE: TDateTimeField
       DisplayLabel = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
@@ -275,11 +273,12 @@ object FmSales: TFmSales
     end
   end
   object cSales: TADOConnection
-    Connected = True
     ConnectionString = 
-      'Provider=SQLOLEDB.1;Password=QWErty123;Persist Security Info=Tru' +
-      'e;User ID=SQL;Initial Catalog=MS;Data Source=ec2-3-8-232-3.eu-we' +
-      'st-2.compute.amazonaws.com'
+      'Provider=SQLOLEDB.1;Persist Security Info=True;User ID=SQL;Initi' +
+      'al Catalog=MS;Data Source=ec2-3-8-232-3.eu-west-2.compute.amazon' +
+      'aws.com;Use Procedure for Prepare=1;Auto Translate=True;Packet S' +
+      'ize=4096;Workstation ID=DESKTOP-KJ4QJCH;Use Encryption for Data=' +
+      'False;Tag with column collation when possible=False'
     Provider = 'SQLOLEDB.1'
     Left = 24
     Top = 576
@@ -295,7 +294,6 @@ object FmSales: TFmSales
     Top = 216
   end
   object qSalesContents: TADOQuery
-    Active = True
     Connection = cSales
     CursorType = ctStatic
     AfterScroll = qSalesContentsAfterScroll
