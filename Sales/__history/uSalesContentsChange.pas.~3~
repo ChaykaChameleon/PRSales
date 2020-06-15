@@ -95,12 +95,12 @@ begin
     showmessage('Выберите товар');
     abort
   end;
-  if (edPrice.Text = '') or (edPrice.Text = '0') then
+  if edPrice.Text = '' then
   begin
     showmessage('Введите цену');
     abort
   end;
-  if (edQTY.Text = '') or (edQTY.Text = '0') then
+  if edQTY.Text = '' then
   begin
     showmessage('Введите кол-во');
     abort

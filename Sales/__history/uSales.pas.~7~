@@ -82,16 +82,16 @@ uses uSaleschange, uSalesContentsChange;
 
 procedure TFmSales.btChangeClick(Sender: TObject);
 begin
+  fmSalesChange.ShowModal;
   fmSalesChange.btCreate.Visible := false;
   fmSalesChange.btChange.Visible := true;
-  fmSalesChange.ShowModal;
 end;
 
 procedure TFmSales.btCreateClick(Sender: TObject);
 begin
+  fmSalesChange.ShowModal;
   fmSalesChange.btCreate.Visible := true;
   fmSalesChange.btChange.Visible := false;
-  fmSalesChange.ShowModal;
 end;
 
 procedure TFmSales.btDeleteClick(Sender: TObject);
@@ -194,18 +194,18 @@ end;
 
 procedure TFmSales.btSalesContentsChangeClick(Sender: TObject);
 begin
+  fmSalesContentsChange.ShowModal;
   fmSalesContentsChange.btCreate.Visible := false;
   fmSalesContentsChange.btChange.Visible := true;
   qSalesContentsAfterScroll(qSalesContents);
-  fmSalesContentsChange.ShowModal;
 end;
 
 procedure TFmSales.btSalesContentsCreateClick(Sender: TObject);
 begin
+  fmSalesContentsChange.ShowModal;
   fmSalesContentsChange.btCreate.Visible := true;
   fmSalesContentsChange.btChange.Visible := false;
   qSalesContentsAfterScroll(qSalesContents);
-  fmSalesContentsChange.ShowModal;
 end;
 
 procedure TFmSales.btSalesContentsDeleteClick(Sender: TObject);
@@ -257,16 +257,18 @@ end;
 
 procedure TFmSales.qSalesAfterOpen(DataSet: TDataSet);
 begin
-  if varRecNo < 1 then
-    varRecNo := 1;
-  qSales.RecNo := varRecNo;
-  qSalesAfterScroll(qSales);
+  if (varRecNo < 0) then
+    qSales.RecNo := varRecNo;
+  qSalesAfterScroll(qSales)
 end;
 
 procedure TFmSales.qSalesBeforeClose(DataSet: TDataSet);
 begin
-  varRecNo := qSales.RecNo;
-
+  try
+    varRecNo := qSales.RecNo;
+  finally
+    varRecNo := 1;
+  end;
 end;
 
 procedure TFmSales.qSalesAfterScroll(DataSet: TDataSet);
@@ -312,7 +314,7 @@ begin
       fmSalesContentsChange.edQTY.Text := qSalesContentsQTY.AsString;
       fmSalesContentsChange.edPrice.Text := qSalesContentsPRICE.AsString;
       fmSalesContentsChange.lcProduct.KeyValue :=
-        qSalesContentsID_PRODUCT.AsVariant;
+        qSalesContentsID_PRODUCT.AsString;
     end
     else
     begin
