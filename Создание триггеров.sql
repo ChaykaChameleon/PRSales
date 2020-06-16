@@ -96,3 +96,28 @@ BEGIN
 
 END
 GO
+--TRG_SALES_REVIEW
+--Триггер служит для: ограничения вввода данных в поле суммы.
+CREATE TRIGGER dbo.TRG_SALES_REVIEW
+ON dbo.SALES
+AFTER INSERT, UPDATE 
+AS
+BEGIN
+ declare @VAR_SUMM int;
+ SELECT
+    @VAR_SUMM = SUM(SC.SUMM) - INSERTED.SUMM
+ FROM SALES_CONTENTS AS SC
+  JOIN INSERTED
+    ON SC.ID_SALES = INSERTED.ID
+ GROUP BY SC.ID_SALES
+          ,INSERTED.SUMM;
+
+IF NOT @VAR_SUMM = 0
+BEGIN
+  ROLLBACK TRAN
+  RAISERROR ('Редактировать поле суммы запрещено', 16, 0);
+  RETURN
+END
+
+END
+GO
